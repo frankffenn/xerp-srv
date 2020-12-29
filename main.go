@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if err := config.InitConfig(); err != nil {
-		log.Fatal("init config:", err)
+		log.Fatal("init config: %v", err)
 	}
 
 	gin.SetMode(config.App.Mode)
@@ -26,7 +26,7 @@ func main() {
 		Handler: router,
 	}
 
-	if err := srv.ListenAndServe(); err != nil {
-		log.Fatal("server err", err)
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatal("listen err %v", err)
 	}
 }
