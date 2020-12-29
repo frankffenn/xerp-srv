@@ -1,0 +1,3 @@
+Mode = "debug"
+ListenAddress = ":6626"
+Timeout = 30
