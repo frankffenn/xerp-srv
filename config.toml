@@ -1,3 +1,4 @@
 Mode = "debug"
-ListenAddress = ":6626"
+ListenAddress = ":8826"
 Timeout = 30
+JWTScrect = "4UTem3dh3G"

@@ -18,6 +18,7 @@ type AppConfig struct {
 	Mode          string
 	ListenAddress string
 	Timeout       int
+	JWTScrect     string
 }
 
 func InitConfig() error {
@@ -38,7 +39,16 @@ func InitConfig() error {
 		logLevel = "debug"
 	}
 
-	logger, _ := log.NewLogger(filepath.Join(dir, "log"), logLevel)
+	ld := filepath.Join(dir, "log")
+	_, err = os.Stat(ld)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(ld, os.ModePerm)
+	}
+	if err != nil {
+		return xerrors.Errorf("stat log dir err: %w", err)
+	}
+
+	logger, _ := log.NewLogger(filepath.Join(filepath.Base(ld), os.Args[0]+".log"), logLevel)
 	log.SetDefault(logger)
 
 	return nil
