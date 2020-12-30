@@ -6,19 +6,26 @@ import (
 	"strings"
 
 	"github.com/frankffenn/xerp-srv/go-utils/config"
+	"github.com/frankffenn/xerp-srv/go-utils/db"
 	"github.com/frankffenn/xerp-srv/go-utils/log"
+	ursmod "github.com/frankffenn/xerp-srv/services/users/mod"
+	"github.com/go-xorm/xorm"
 	"golang.org/x/xerrors"
 )
 
 var defaultFile = "config.toml"
 
-var App *AppConfig
+var (
+	App *AppConfig
+	eng *xorm.Engine
+)
 
 type AppConfig struct {
 	Mode          string
 	ListenAddress string
 	Timeout       int
 	JWTScrect     string
+	DBUrl         string
 }
 
 func InitConfig() error {
@@ -52,4 +59,20 @@ func InitConfig() error {
 	log.SetDefault(logger)
 
 	return nil
+}
+
+func initDB() error {
+	var err error
+	eng, err = db.OpenDB("mysql", App.DBUrl)
+	if err != nil {
+		return err
+	}
+	eng.Sync2(
+		new(ursmod.User),
+	)
+}
+
+// Session ...
+func Session() *xorm.Session {
+	return eng.NewSession()
 }

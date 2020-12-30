@@ -1,7 +1,5 @@
 Mode = "debug"
 ListenAddress = ":8826"
 Timeout = 30
-<<<<<<< HEAD
 JWTScrect = "4UTem3dh3G"
-=======
->>>>>>> ba10bac8edd65b4dc1305c321dc76966db26d956
+DBUrl = "root:1234@tcp(127.0.0.1:3306)/xerp?charset=utf8&clientFoundRows=true"

@@ -17,11 +17,12 @@ var (
 
 func Init(router *gin.Engine) error {
 	jwtAuthUserMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:       "User",
-		Key:         []byte(config.App.JWTScrect),
-		Timeout:     TokenExpired,
-		MaxRefresh:  TokenRefreshTimeout,
-		IdentityKey: "guid",
+		Realm:         "User",
+		Key:           []byte(config.App.JWTScrect),
+		Timeout:       TokenExpired,
+		MaxRefresh:    TokenRefreshTimeout,
+		IdentityKey:   "guid",
+		Authenticator: JwtAuthenticator,
 	})
 	if err != nil {
 		return err
