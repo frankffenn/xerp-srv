@@ -1,4 +1,7 @@
 Mode = "debug"
 ListenAddress = ":8826"
 Timeout = 30
+<<<<<<< HEAD
 JWTScrect = "4UTem3dh3G"
+=======
+>>>>>>> ba10bac8edd65b4dc1305c321dc76966db26d956
