@@ -15,7 +15,7 @@ func ResponseSuccess(data map[string]interface{}) gin.H {
 func ResponseFailWithError(err *errors.Error) gin.H {
 	return gin.H{
 		"success": false,
-		"code":    code,
-		"msg":     errors.GetMsg(code),
+		"code":    err.Code,
+		"msg":     err.Message,
 	}
 }

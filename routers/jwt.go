@@ -82,7 +82,7 @@ func JwtIdentityHandler(c *gin.Context) interface{} {
 }
 
 func JwtLoginResponse(c *gin.Context, code int, token string, expire time.Time) {
-	jToken, err := AuthUserMiddleware.ParseTokenString(c)
+	jToken, err := AuthUserMiddleware.ParseTokenString(token)
 	claims := jwt.ExtractClaimsFromToken(jToken)
 	userId := uint64(claims["user_id"].(float64))
 
@@ -93,13 +93,14 @@ func JwtLoginResponse(c *gin.Context, code int, token string, expire time.Time) 
 		CurrToken: token,
 	}
 
-	_, err := json.Marshal(auth)
+	_, err = json.Marshal(auth)
 	if err != nil {
 		c.JSON(http.StatusOK, ResponseFailWithError(errors.ErrTokenCreateFailed))
 		return
 	}
 
 	c.JSON(http.StatusOK, ResponseSuccess(map[string]interface{}{
+		"user_id":   userId,
 		"token":     token,
 		"expire":    expire.Format(time.RFC3339),
 		"expire_ts": expire.Unix(),
