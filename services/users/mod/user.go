@@ -16,7 +16,7 @@ type LoginVar struct {
 	Password  string    `form:"password" json:"password" binding:"required"`
 }
 
-type loginResp struct {
+type LoginResp struct {
 	GUID   string `json:"guid"`
 	UserID uint64 `json:"user_id"`
 	Level  uint64 `json:"level"`
@@ -24,16 +24,16 @@ type loginResp struct {
 
 // User ...
 type User struct {
-	ID          uint64     `xorm:"'id' pk autoincr"`
-	Username    string     `xorm:"'username' varchar(25) unique "`
-	Password    string     `xorm:"'password' not null"`
-	AccountType string     `xorm:"'account_type'"`
-	GUID        string     `json:"'guid'"`
-	Level       uint64     `xorm:"'level'"`
-	IsBanned    bool       `xorm:"'is_banned'`
-	CreatedAt   time.Time  `xorm:"created"`
-	UpdatedAt   time.Time  `xorm:"updated" `
-	DeletedAt   *time.Time `xorm:"-" deleted json:"omitempty"`
+	ID        uint64     `xorm:"pk autoincr"`
+	Username  string     `xorm:"'username' varchar(25) unique "`
+	Password  string     `xorm:"'password' not null"`
+	LoginType LoginType  `xorm:"'login_type'"`
+	GUID      string     `json:"'guid'"`
+	Level     uint64     `xorm:"'level'"`
+	IsBanned  bool       `xorm:"'is_banned'`
+	CreatedAt time.Time  `xorm:"created"`
+	UpdatedAt time.Time  `xorm:"updated" `
+	DeletedAt *time.Time `xorm:"-" deleted json:"omitempty"`
 }
 
 func (u *User) TableName() string {

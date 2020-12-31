@@ -8,7 +8,7 @@ import (
 	mod "github.com/frankffenn/xerp-srv/services/users/mod"
 )
 
-func CreateUser(ctx context.Context, user *mod.User) (*mod.User, error) {
+func CreateUser(ctx context.Context, user *mod.User) error {
 	return db.CreateUser(ctx, config.Session(), user)
 }
 

@@ -9,6 +9,7 @@ import (
 	"github.com/frankffenn/xerp-srv/go-utils/db"
 	"github.com/frankffenn/xerp-srv/go-utils/log"
 	ursmod "github.com/frankffenn/xerp-srv/services/users/mod"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"golang.org/x/xerrors"
 )
@@ -58,6 +59,10 @@ func InitConfig() error {
 	logger, _ := log.NewLogger(filepath.Join(filepath.Base(ld), os.Args[0]+".log"), logLevel)
 	log.SetDefault(logger)
 
+	if err := initDB(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -70,6 +75,7 @@ func initDB() error {
 	eng.Sync2(
 		new(ursmod.User),
 	)
+	return nil
 }
 
 // Session ...

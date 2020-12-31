@@ -5,8 +5,8 @@ import (
 )
 
 type Error struct {
-	Code    int `json:"code"`
-	Message int `json:"message"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 func (e *Error) Error() string {
@@ -18,17 +18,17 @@ func newError(code int, msg string) *Error {
 }
 
 const (
-	UnknownErr ErrorCode = iota + 90001
+	UnknownErr = iota + 90001
 )
 
 const (
-	InvalidRequestParams ErrorCode = iota + 10001
+	InvalidRequestParams = iota + 10001
 	MissingRequestParams
 	UnsupportedLoginType
 )
 
 const (
-	UserNotFound ErrorCode = iota + 2000
+	UserNotFound = iota + 2000
 	InvalidPassword
 )
 
