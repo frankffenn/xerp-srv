@@ -2,7 +2,10 @@ package routers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/frankffenn/xerp-srv/errors"
@@ -56,4 +59,49 @@ func phoneAuth(ctx context.Context, username, password string, checkAdmin bool) 
 
 func wechatAuth(username string) (interface{}, error) {
 	return nil, nil
+}
+
+func JwtPayloadFunc(data interface{}) jwt.MapClaims {
+	if v, ok := data.(usrmod.LoginResp); ok {
+		return jwt.MapClaims{
+			"guid":    v.GUID,
+			"user_id": v.UserID,
+			"level":   v.Level,
+		}
+	}
+	return jwt.MapClaims{}
+}
+
+func JwtIdentityHandler(c *gin.Context) interface{} {
+	claims := jwt.ExtractClaims(c)
+	return &usrmod.LoginResp{
+		GUID:   claims["guid"].(string),
+		UserID: uint64(claims["user_id"].(float64)),
+		Level:  uint64(claims["level"].(float64)),
+	}
+}
+
+func JwtLoginResponse(c *gin.Context, code int, token string, expire time.Time) {
+	jToken, err := AuthUserMiddleware.ParseTokenString(c)
+	claims := jwt.ExtractClaimsFromToken(jToken)
+	userId := uint64(claims["user_id"].(float64))
+
+	auth := &struct {
+		CurrToken string `json:"curr_token"`
+		LastToken string `json:"last_token"`
+	}{
+		CurrToken: token,
+	}
+
+	_, err := json.Marshal(auth)
+	if err != nil {
+		c.JSON(http.StatusOK, ResponseFailWithError(errors.ErrTokenCreateFailed))
+		return
+	}
+
+	c.JSON(http.StatusOK, ResponseSuccess(map[string]interface{}{
+		"token":     token,
+		"expire":    expire.Format(time.RFC3339),
+		"expire_ts": expire.Unix(),
+	}))
 }

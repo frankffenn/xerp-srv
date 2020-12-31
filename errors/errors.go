@@ -25,6 +25,7 @@ const (
 	InvalidRequestParams = iota + 10001
 	MissingRequestParams
 	UnsupportedLoginType
+	TokenCreateFailed
 )
 
 const (
@@ -39,6 +40,8 @@ var (
 	ErrInvalidRequestParams = newError(InvalidRequestParams, "invalid request params")
 	ErrMissingRequestParams = newError(MissingRequestParams, "missing request params")
 	ErrUnsupportedLoginType = newError(UnsupportedLoginType, "unsupported login type")
-	ErrUserNotFound         = newError(UserNotFound, "user not found")
-	ErrInvalidPassword      = newError(InvalidPassword, "invalid password")
+	ErrTokenCreateFailed    = newError(TokenCreateFailed, "create token failed")
+
+	ErrUserNotFound    = newError(UserNotFound, "user not found")
+	ErrInvalidPassword = newError(InvalidPassword, "invalid password")
 )
