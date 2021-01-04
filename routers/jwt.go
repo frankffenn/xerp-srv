@@ -8,8 +8,8 @@ import (
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/frankffenn/go-utils/log"
 	"github.com/frankffenn/xerp-srv/errors"
-	"github.com/frankffenn/xerp-srv/go-utils/log"
 	"github.com/frankffenn/xerp-srv/services/users"
 	user "github.com/frankffenn/xerp-srv/services/users/mod"
 	usrmod "github.com/frankffenn/xerp-srv/services/users/mod"

@@ -1,3 +1,0 @@
-[submodule "go-utils"]
-	path = go-utils
-	url = https://github.com/frankffenn/go-utils.git

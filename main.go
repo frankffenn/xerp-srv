@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/frankffenn/go-utils/log"
 	"github.com/frankffenn/xerp-srv/config"
-	"github.com/frankffenn/xerp-srv/go-utils/log"
 	"github.com/frankffenn/xerp-srv/routers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

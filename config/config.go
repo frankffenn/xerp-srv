@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/frankffenn/xerp-srv/go-utils/config"
-	"github.com/frankffenn/xerp-srv/go-utils/db"
-	"github.com/frankffenn/xerp-srv/go-utils/log"
+	"github.com/frankffenn/go-utils/config"
+	"github.com/frankffenn/go-utils/db"
+	"github.com/frankffenn/go-utils/log"
 	ursmod "github.com/frankffenn/xerp-srv/services/users/mod"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
