@@ -13,7 +13,7 @@ const (
 type LoginVar struct {
 	LoginType LoginType `form:"login_type" json:"login_type" binding:"required"`
 	Username  string    `form:"username" json:"username" binding:"required"`
-	Password  string    `form:"password" json:"password" binding:"required"`
+	Password  string    `form:"password" json:"password"`
 }
 
 type LoginResp struct {

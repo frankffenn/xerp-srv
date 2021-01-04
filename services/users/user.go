@@ -15,3 +15,7 @@ func CreateUser(ctx context.Context, user *mod.User) error {
 func GetUserInfo(ctx context.Context, userid uint64) (*mod.User, error) {
 	return db.GetUserInfo(ctx, config.Session(), userid)
 }
+
+func GetUserInfoFromUsername(ctx context.Context, username string) (*mod.User, error) {
+	return db.GetUserInfoFromUsername(ctx, config.Session(), username)
+}

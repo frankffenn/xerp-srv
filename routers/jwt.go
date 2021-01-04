@@ -3,7 +3,6 @@ package routers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,10 +10,11 @@ import (
 	"github.com/frankffenn/go-utils/log"
 	"github.com/frankffenn/xerp-srv/errors"
 	"github.com/frankffenn/xerp-srv/services/users"
-	user "github.com/frankffenn/xerp-srv/services/users/mod"
+	"github.com/frankffenn/xerp-srv/services/users/db"
 	usrmod "github.com/frankffenn/xerp-srv/services/users/mod"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 type AppJWTMiddleware struct {
@@ -22,17 +22,17 @@ type AppJWTMiddleware struct {
 }
 
 func JwtAuthenticator(c *gin.Context) (interface{}, error) {
-	var login user.LoginVar
+	var login usrmod.LoginVar
 	if err := c.ShouldBind(&login); err != nil {
 		return "", errors.ErrInvalidRequestParams
 	}
 
 	switch login.LoginType {
-	case user.GuestLogin:
+	case usrmod.GuestLogin:
 		return guestAuth(c, login.Username)
-	case user.PhoneLogin:
+	case usrmod.PhoneLogin:
 		return phoneAuth(c, login.Username, login.Password, false)
-	case user.WechatLogin:
+	case usrmod.WechatLogin:
 		log.Info("implement me")
 	default:
 		return "", errors.ErrUnsupportedLoginType
@@ -42,15 +42,24 @@ func JwtAuthenticator(c *gin.Context) (interface{}, error) {
 }
 
 func guestAuth(ctx context.Context, username string) (interface{}, error) {
+	found, err := users.GetUserInfoFromUsername(ctx, username)
+	if err != nil && !xerrors.Is(err, db.ErrUserNotFound) {
+		return nil, err
+	}
+
+	if found != nil {
+		return &usrmod.LoginResp{GUID: found.GUID, UserID: found.ID}, nil
+	}
+
 	u := &usrmod.User{
-		Username:  fmt.Sprintln(username),
+		Username:  username,
 		LoginType: usrmod.GuestLogin,
 		GUID:      uuid.New().String(),
 	}
 	if err := users.CreateUser(ctx, u); err != nil {
 		return nil, err
 	}
-	return &user.LoginResp{GUID: u.GUID, UserID: u.ID}, nil
+	return &usrmod.LoginResp{GUID: u.GUID, UserID: u.ID}, nil
 }
 
 func phoneAuth(ctx context.Context, username, password string, checkAdmin bool) (interface{}, error) {
@@ -62,7 +71,7 @@ func wechatAuth(username string) (interface{}, error) {
 }
 
 func JwtPayloadFunc(data interface{}) jwt.MapClaims {
-	if v, ok := data.(usrmod.LoginResp); ok {
+	if v, ok := data.(*usrmod.LoginResp); ok {
 		return jwt.MapClaims{
 			"guid":    v.GUID,
 			"user_id": v.UserID,
